@@ -4,3 +4,13 @@ export interface KindleClipping {
   timestamp: Date;
   content: string;
 }
+
+export interface BookGroup {
+  key: string; // Book key, e.g., "bookname|author"
+  bookName: string;
+  author: string;
+  children: {
+    originalIndex: number;
+    clipping: KindleClipping;
+  }[];
+}
