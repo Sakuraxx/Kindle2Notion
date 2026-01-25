@@ -1,6 +1,7 @@
 import React from 'react';
 import { BookNode } from './BookNode';
 import { BookGroup } from '../../models/kindle-clipping.model';
+import './ClippingTree.css';
 
 interface ClippingTreeProps {
   groups: BookGroup[];

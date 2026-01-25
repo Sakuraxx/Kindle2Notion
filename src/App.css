@@ -114,3 +114,150 @@ button {
     background-color: #0f0f0f69;
   }
 }
+
+/* --- CSS Variables for Easy Theming --- */
+:root {
+  --primary-color: #0078d4;
+  --primary-hover: #005a9e;
+  --bg-color: #f5f5f7;
+  --card-bg: #ffffff;
+  --border-color: #e1e4e8;
+  --text-main: #24292e;
+  --text-muted: #6a737d;
+  --terminal-bg: #1e1e1e;
+  --terminal-text: #d4d4d4;
+  --status-bg: #007acc;
+}
+
+/* --- Global Reset --- */
+body, html, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  color: var(--text-main);
+}
+
+/* --- Main Layout --- */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  background-color: var(--bg-color);
+}
+
+.main-content {
+  flex: 1;
+  display: flex;           /* Enable flexbox layout */
+  flex-direction: column;  /* Vertical arrangement */
+  overflow: hidden;        /* Prevent outer scrolling */
+  padding: 12px;
+  box-sizing: border-box;
+}
+
+header {
+  margin-bottom: 24px;
+}
+
+header h1 {
+  margin: 0 0 8px 0;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+header p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+/* --- Toolbar & Buttons --- */
+.toolbar {
+  display: flex;
+  gap: 12px;
+  margin: 20px 0;
+  align-items: center;
+  background: var(--card-bg);
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+button {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+}
+
+button.primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+button.primary:hover:not(:disabled) {
+  background-color: var(--primary-hover);
+}
+
+button.secondary {
+  background-color: white;
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+}
+
+button.secondary:hover:not(:disabled) {
+  background-color: #f0f7ff;
+}
+
+button:disabled {
+  background-color: #eaeaea;
+  color: #999;
+  border-color: #ddd;
+  cursor: not-allowed;
+}
+
+/* --- Tree View Container --- */
+/* Let the list container occupy all remaining space and handle scrolling */
+.tree-container {
+  flex: 1;                 /* Auto-occupy remaining height */
+  overflow-y: auto;        /* Allow vertical scrolling only here */
+  background: var(--card-bg);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  
+  /* Key: Ensure flex children can shrink properly */
+  min-height: 0;           
+  margin-top: 10px;        /* Maintain spacing from toolbar above */
+}
+
+.tree-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.tree-container::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 10px;
+}
+
+/* --- Scrollbar Styling --- */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #aaa;
+}

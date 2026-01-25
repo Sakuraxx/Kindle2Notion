@@ -1,0 +1,21 @@
+.log-console {
+  height: 140px;
+  background-color: var(--terminal-bg);
+  color: var(--terminal-text);
+  padding: 10px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 12px;
+  overflow-y: auto;
+  border-top: 1px solid #333;
+}
+
+.log-line {
+  margin-bottom: 2px;
+  border-left: 2px solid #333;
+  padding-left: 8px;
+}
+
+.log-prefix {
+  color: #569cd6;
+  margin-right: 5px;
+}

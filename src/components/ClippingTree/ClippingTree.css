@@ -1,0 +1,40 @@
+.book-node {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.book-header {
+  padding: 10px 15px;
+  display: flex;
+  align-items: center;
+  background-color: #fafbfc;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.book-header:hover {
+  background-color: #f3f4f6;
+}
+
+.clipping-item {
+  padding: 12px 20px 12px 45px;
+  border-bottom: 1px solid #f6f8fa;
+  display: flex;
+  gap: 12px;
+  font-size: 13px;
+  transition: background 0.1s;
+}
+
+.clipping-item:hover {
+  background-color: #fcfcfc;
+}
+
+.clipping-content {
+  margin: 0 0 4px 0;
+  line-height: 1.6;
+  color: #24292e;
+}
+
+.clipping-date {
+  font-size: 11px;
+  color: var(--text-muted);
+}

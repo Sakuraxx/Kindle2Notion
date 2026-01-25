@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ClippingItem } from './ClippingItem';
 import { BookGroup } from '../../models/kindle-clipping.model';
+import './ClippingTree.css';
 
 export const BookNode: React.FC<{
   group: BookGroup;
@@ -14,14 +15,8 @@ export const BookNode: React.FC<{
   const isAllSelected = allChildIndices.every(idx => selectedIndices.has(idx));
 
   return (
-    <div style={{ borderBottom: "1px solid #f0f0f0" }}>
-      <div style={{ 
-        padding: "10px", 
-        display: "flex", 
-        alignItems: "center", 
-        background: "#fafafa",
-        gap: "8px" 
-      }}>
+    <div className="book-node">
+      <div className="book-header">
         <button 
           onClick={() => setExpanded(!expanded)}
           style={{ background: "none", border: "none", cursor: "pointer", fontSize: "12px", padding: 0, width: "20px" }}
