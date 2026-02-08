@@ -27,6 +27,12 @@ export function useAppLogic() {
   const [apiKey, setApiKey] = useState("");
   const [databaseId, setDatabaseId] = useState("");
   const [logs, setLogs] = useState<string[]>([]);
+  
+  // Track if Compare is in progress
+  const [isComparing, setIsComparing] = useState(false);
+  
+  // Track collapsed book nodes
+  const [collapsedBookKeys, setCollapsedBookKeys] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     const savedKey = localStorage.getItem("notion_api_key");
@@ -91,6 +97,16 @@ export function useAppLogic() {
         
         setStatusText("Import completed");
         addLog(`File: Successfully parsed ${data.length} clippings. Ready to Compare.`);
+        
+        // Collapse all nodes after import
+        setTimeout(() => {
+          const groups = new Map<string, boolean>();
+          data.forEach(clipping => {
+            const key = `${clipping.bookName}-${clipping.author}`;
+            groups.set(key, true);
+          });
+          setCollapsedBookKeys(new Set(groups.keys()));
+        }, 0);
       }
     } catch (err: any) {
       addLog(`Error: Import failed - ${err.message}`);
@@ -115,6 +131,7 @@ export function useAppLogic() {
       return;
     }
 
+    setIsComparing(true);
     setStatusText("Fetching Notion data...");
     addLog("Compare: Fetching all books from Notion...");
 
@@ -138,14 +155,26 @@ export function useAppLogic() {
       
       const diffCount = kindleClippings.length - uniqueClippings.length;
       setKindleClippings(uniqueClippings);
-      setSelectedIndices(new Set()); 
+      setSelectedIndices(new Set());
 
       setStatusText("Comparison complete");
       addLog(`Compare: Finished. Hidden ${diffCount} existing clippings. Showing ${uniqueClippings.length} new/unsynced items.`);
 
+      // Collapse all nodes after compare
+      setTimeout(() => {
+        const groups = new Map<string, boolean>();
+        uniqueClippings.forEach(clipping => {
+          const key = `${clipping.bookName}-${clipping.author}`;
+          groups.set(key, true);
+        });
+        setCollapsedBookKeys(new Set(groups.keys()));
+      }, 0);
+
     } catch (error: any) {
       setStatusText("Comparison failed");
       addLog(`Error: ${error.message}`);
+    } finally {
+      setIsComparing(false);
     }
   };
 
@@ -209,6 +238,16 @@ export function useAppLogic() {
     }
   };
 
+  const handleToggleBookNode = (key: string) => {
+    const next = new Set(collapsedBookKeys);
+    if (next.has(key)) {
+      next.delete(key);
+    } else {
+      next.add(key);
+    }
+    setCollapsedBookKeys(next);
+  };
+
   return {
     kindleClippings,
     selectedIndices,
@@ -225,6 +264,9 @@ export function useAppLogic() {
     handleImport,
     handleToggle,
     handleCompare,
-    handleSync
+    handleSync,
+    isComparing,
+    collapsedBookKeys,
+    handleToggleBookNode
   };
 }

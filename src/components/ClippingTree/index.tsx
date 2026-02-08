@@ -7,12 +7,16 @@ interface ClippingTreeProps {
   groups: BookGroup[];
   selectedIndices: Set<number>;
   onToggle: (indices: number[]) => void;
+  collapsedBookKeys?: Set<string>;
+  onToggleBookNode?: (key: string) => void;
 }
 
 export const ClippingTree: React.FC<ClippingTreeProps> = ({
   groups,
   selectedIndices,
   onToggle,
+  collapsedBookKeys,
+  onToggleBookNode,
 }) => {
   return (
     <div style={{ border: '1px solid #eee', borderRadius: '6px', background: '#fff' }}>
@@ -27,6 +31,8 @@ export const ClippingTree: React.FC<ClippingTreeProps> = ({
             group={group}
             selectedIndices={selectedIndices}
             onToggle={onToggle}
+            isCollapsed={collapsedBookKeys?.has(group.key) ?? false}
+            onToggleCollapsed={() => onToggleBookNode?.(group.key)}
           />
         ))
       )}

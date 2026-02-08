@@ -32,7 +32,7 @@ function App() {
           <button 
             className="secondary" 
             onClick={data.handleCompare}
-            disabled={data.kindleClippings.length === 0}
+            disabled={data.kindleClippings.length === 0 || data.isComparing}
             title="Fetch Notion data and show only new clippings"
           >
             🔄 Compare
@@ -53,7 +53,10 @@ function App() {
           <ClippingTree 
             groups={data.displayGroups} 
             selectedIndices={data.selectedIndices} 
-            onToggle={data.handleToggle} />
+            onToggle={data.handleToggle}
+            collapsedBookKeys={data.collapsedBookKeys}
+            onToggleBookNode={data.handleToggleBookNode}
+          />
         </div>
       </div>
 

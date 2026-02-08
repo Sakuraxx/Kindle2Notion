@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ClippingItem } from './ClippingItem';
 import { BookGroup } from '../../models/kindle-clipping.model';
 import './ClippingTree.css';
@@ -7,8 +7,10 @@ export const BookNode: React.FC<{
   group: BookGroup;
   selectedIndices: Set<number>;
   onToggle: (indices: number[]) => void;
-}> = ({ group, selectedIndices, onToggle }) => {
-  const [expanded, setExpanded] = useState(true);
+  isCollapsed?: boolean;
+  onToggleCollapsed?: () => void;
+}> = ({ group, selectedIndices, onToggle, isCollapsed = false, onToggleCollapsed }) => {
+  const expanded = !isCollapsed;
 
   // Check if all clippings under the book are selected
   const allChildIndices = group.children.map(c => c.originalIndex);
@@ -18,7 +20,7 @@ export const BookNode: React.FC<{
     <div className="book-node">
       <div className="book-header">
         <button 
-          onClick={() => setExpanded(!expanded)}
+          onClick={() => onToggleCollapsed?.()}
           style={{ background: "none", border: "none", cursor: "pointer", fontSize: "12px", padding: 0, width: "20px" }}
         >
           {expanded ? '▼' : '▶'}
@@ -28,7 +30,7 @@ export const BookNode: React.FC<{
           checked={isAllSelected}
           onChange={() => onToggle(allChildIndices)} 
         />
-        <div style={{ flex: 1, cursor: "pointer" }} onClick={() => setExpanded(!expanded)}>
+        <div style={{ flex: 1, cursor: "pointer" }} onClick={() => onToggleCollapsed?.()}>
           <strong style={{ fontSize: "14px" }}>{group.bookName}</strong>
           <span style={{ fontSize: "12px", color: "#888", marginLeft: "8px" }}>({group.author})</span>
           <span style={{ fontSize: "10px", background: "#eee", padding: "2px 6px", borderRadius: "10px", marginLeft: "8px" }}>
