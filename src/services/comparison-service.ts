@@ -1,4 +1,8 @@
 import type { Book, ComparisonResult } from "../models/comparison.model.js";
+import type { KindleClipping } from "../models/kindle-clipping.model.js";
+
+// Helper to generate key
+const getBookKey = (title: string, author: string) => `${title.toLowerCase()}|${author.toLowerCase()}`;
 
 export function compareBooks(notionBooks: Book[], kindleBooks: Book[]): ComparisonResult {
   const result: ComparisonResult = {
@@ -38,4 +42,27 @@ export function compareBooks(notionBooks: Book[], kindleBooks: Book[]): Comparis
   }
 
   return result;
+}
+
+export function filterUniqueClippings(localClippings: KindleClipping[], notionBooks: Book[]): KindleClipping[] {
+  const notionMap = new Map<string, Set<string>>();
+
+  // Build a map: "Title|Author" -> Set<Content>
+  for (const book of notionBooks) {
+    const key = getBookKey(book.title, book.author);
+    const contentSet = new Set(book.clippings);
+    notionMap.set(key, contentSet);
+  }
+
+  // Filter local clippings
+  return localClippings.filter(clipping => {
+    const key = getBookKey(clipping.bookName, clipping.author);
+    const remoteContent = notionMap.get(key);
+
+    // If book doesn't exist remotely, it's new (keep it)
+    if (!remoteContent) return true;
+
+    // If book exists, check if content exists
+    return !remoteContent.has(clipping.content);
+  });
 }

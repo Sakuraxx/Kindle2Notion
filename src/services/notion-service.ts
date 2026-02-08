@@ -5,7 +5,6 @@ import type { NotionBookClipping } from "../models/notion-clipping.model.js"
 import type { Book } from '../models/comparison.model.js';
 import { fetch as tauriFetch } from '@tauri-apps/plugin-http';
 import { LogCallback, LogType } from '../models/log.model.js';
-import { on } from 'node:cluster';
 
 export async function getAllBookClippings(apiKey: string, dataSourceId: string): Promise<NotionBookClipping[]>
 {
