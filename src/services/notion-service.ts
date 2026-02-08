@@ -1,4 +1,4 @@
-import { Client, type BlockObjectRequest, type CreatePageParameters, type QueryDataSourceResponse } from '@notionhq/client';
+import { Client, type BlockObjectRequest, type CreatePageParameters, type QueryDataSourceResponse, type ListBlockChildrenResponse } from '@notionhq/client';
 import { isFullPage} from "@notionhq/client/build/src/helpers.js";
 import { mapToNotionBookClipping } from "./notion-mapper.js";
 import type { NotionBookClipping } from "../models/notion-clipping.model.js"
@@ -13,24 +13,62 @@ export async function getAllBookClippings(apiKey: string, dataSourceId: string):
     fetch: tauriFetch as any 
   });
 
-  // Get pages
-  const pages: QueryDataSourceResponse = await notion.dataSources.query({
-    data_source_id: dataSourceId,
-  });
-  const fullPages = pages.results.filter(isFullPage);
-
-  // Create promises
-  const clippingPromises = fullPages.map(async (page) => {
-    const blockResp = await notion.blocks.children.list({
-      block_id: page.id,
+  const allPagesResults: any[] = [];
+  let hasMorePages = true;
+  let nextPageCursor: string | undefined = undefined;
+  while (hasMorePages) {
+    const pages: QueryDataSourceResponse = await notion.dataSources.query({
+      data_source_id: dataSourceId,
+      start_cursor: nextPageCursor,
+      page_size: 100,
     });
-    
-    return mapToNotionBookClipping(page, blockResp);
-  });
+    allPagesResults.push(...pages.results);
+    hasMorePages = pages.has_more;
+    nextPageCursor = pages.next_cursor ?? undefined;
+  }
 
-  const clippings = await Promise.all(clippingPromises);
+  const fullPages = allPagesResults.filter(isFullPage);
+  
+  const resultClippings: NotionBookClipping[] = [];
+  const BATCH_SIZE = 5;
+  for (let i = 0; i < fullPages.length; i += BATCH_SIZE) {
+    const batch = fullPages.slice(i, i + BATCH_SIZE);
+    const batchPromises = batch.map(async (page) => {
+      const allBlocks: any[] = [];
+      let hasMoreBlocks = true;
+      let nextBlockCursor: string | undefined = undefined;
+      while (hasMoreBlocks) {
+        const blockResp: ListBlockChildrenResponse = await notion.blocks.children.list({
+          block_id: page.id,
+          start_cursor: nextBlockCursor,
+          page_size: 100,
+        });
+        allBlocks.push(...blockResp.results);
+        hasMoreBlocks = blockResp.has_more;
+        nextBlockCursor = blockResp.next_cursor ?? undefined;
+      }
 
-  return clippings.filter((c): c is NotionBookClipping => c !== null);
+      const syntheticResponse = {
+        results: allBlocks,
+        type: 'block',
+        block: {},
+        object: 'list',
+        next_cursor: null,
+        has_more: false
+      } as unknown as ListBlockChildrenResponse;
+      
+      return mapToNotionBookClipping(page, syntheticResponse);
+    });
+
+    const batchResults = await Promise.all(batchPromises);
+    batchResults.forEach(r => {
+        if(r) resultClippings.push(r);
+    });
+
+    await new Promise(resolve => setTimeout(resolve, 200)); 
+  }
+
+  return resultClippings;
 }
 
 export async function createPageForBook(apiKey: string, datasourceId: string, book: Book) {  
