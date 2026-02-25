@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLanguage } from '../i18n/LanguageContext';
 
 interface SearchBarProps {
   value: string;
@@ -6,13 +7,15 @@ interface SearchBarProps {
 }
 
 export const SearchBar: React.FC<SearchBarProps> = ({ value, onChange }) => {
+  const { t } = useLanguage();
+
   return (
     <div style={{ flex: 1, position: 'relative' }}>
       <input
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder="Search book name, author, or notes..."
+        placeholder={t.searchBar.placeholder}
         style={{
           width: '100%',
           padding: '8px 12px',

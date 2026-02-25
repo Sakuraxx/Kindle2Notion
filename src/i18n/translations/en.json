@@ -1,0 +1,68 @@
+{
+  "common": {
+    "language": "English",
+    "languageName": "English",
+    "appName": "Kindle2Notion"
+  },
+  "header": {
+    "title": "Kindle2Notion",
+    "subtitle": "Seamlessly sync your Kindle reading notes to Notion database"
+  },
+  "configPanel": {
+    "title": "Notion Connection Config",
+    "apiKeyLabel": "API Key",
+    "apiKeyPlaceholder": "secret_...",
+    "databaseIdLabel": "Database / DataSource ID",
+    "databaseIdPlaceholder": "Enter ID...",
+    "saveButton": "Save"
+  },
+  "buttons": {
+    "import": "Import",
+    "compare": "Compare",
+    "sync": "Sync",
+    "languageSwitch": "Language"
+  },
+  "searchBar": {
+    "placeholder": "Search book name, author, or notes..."
+  },
+  "clippingTree": {
+    "noMatching": "No matching clippings found"
+  },
+  "statusBar": {
+    "status": "Status",
+    "total": "Total",
+    "selected": "Selected",
+    "version": "Kindle2Notion v0.1.0"
+  },
+  "logConsole": {
+    "title": "TERMINAL"
+  },
+  "messages": {
+    "compareTooltip": "Fetch Notion data and show only new clippings",
+    "syncDisabled": "Select clippings to sync",
+    "ready": "Ready",
+    "importing": "Importing...",
+    "comparing": "Comparing...",
+    "syncing": "Syncing...",
+    "success": "Success",
+    "error": "Error",
+    "importSuccess": "Import successful",
+    "syncSuccess": "Sync completed successfully",
+    "compareSuccess": "Comparison completed"
+  },
+  "logs": {
+    "configSaved": "System: Configuration saved locally",
+    "parsedClippings": "File: Successfully parsed {count} clippings. Ready to Compare.",
+    "noClippingsToCompare": "Warn: No local clippings to compare.",
+    "compareFetchingNotion": "Compare: Fetching all books from Notion...",
+    "compareRetrieved": "Compare: Retrieved {count} books from Notion.",
+    "compareFinished": "Compare: Finished. Hidden {hidden} existing clippings. Showing {showing} new/unsynced items.",
+    "syncNoItemsSelected": "Sync: No items selected.",
+    "syncStarting": "Sync: Starting upload for {count} items...",
+    "syncCreatingPages": "Sync: Creating {count} new pages...",
+    "syncAppendingPages": "Sync: Appending to {count} existing pages...",
+    "syncCompleted": "Sync: Task completed successfully.",
+    "importFailed": "Error: Import failed - {error}",
+    "generalError": "Error: {error}"
+  }
+}

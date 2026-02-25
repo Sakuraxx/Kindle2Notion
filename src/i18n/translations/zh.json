@@ -1,0 +1,68 @@
+{
+  "common": {
+    "language": "中文",
+    "languageName": "中文",
+    "appName": "Kindle2Notion"
+  },
+  "header": {
+    "title": "Kindle2Notion",
+    "subtitle": "将您的Kindle阅读笔记无缝同步到Notion数据库"
+  },
+  "configPanel": {
+    "title": "Notion连接配置",
+    "apiKeyLabel": "API密钥",
+    "apiKeyPlaceholder": "secret_...",
+    "databaseIdLabel": "数据库/数据源ID",
+    "databaseIdPlaceholder": "输入ID...",
+    "saveButton": "保存"
+  },
+  "buttons": {
+    "import": "导入",
+    "compare": "比较",
+    "sync": "同步",
+    "languageSwitch": "语言"
+  },
+  "searchBar": {
+    "placeholder": "搜索书名、作者或笔记..."
+  },
+  "clippingTree": {
+    "noMatching": "未找到匹配的笔记"
+  },
+  "statusBar": {
+    "status": "状态",
+    "total": "总数",
+    "selected": "已选",
+    "version": "Kindle2Notion v0.1.0"
+  },
+  "logConsole": {
+    "title": "终端"
+  },
+  "messages": {
+    "compareTooltip": "获取Notion数据并仅显示新笔记",
+    "syncDisabled": "请选择要同步的笔记",
+    "ready": "就绪",
+    "importing": "导入中...",
+    "comparing": "比较中...",
+    "syncing": "同步中...",
+    "success": "成功",
+    "error": "错误",
+    "importSuccess": "导入成功",
+    "syncSuccess": "同步完成",
+    "compareSuccess": "比较完成"
+  },
+  "logs": {
+    "configSaved": "系统: 配置已本地保存",
+    "parsedClippings": "文件: 成功解析 {count} 条笔记. 准备好比较.",
+    "noClippingsToCompare": "警告: 没有本地笔记可以比较.",
+    "compareFetchingNotion": "比较: 正在从Notion获取所有书籍...",
+    "compareRetrieved": "比较: 从Notion检索到 {count} 本书籍.",
+    "compareFinished": "比较: 完成. 隐藏了 {hidden} 条现有笔记. 显示 {showing} 条新/未同步项目.",
+    "syncNoItemsSelected": "同步: 未选择任何项目.",
+    "syncStarting": "同步: 开始上传 {count} 项...",
+    "syncCreatingPages": "同步: 创建 {count} 个新页面...",
+    "syncAppendingPages": "同步: 追加到 {count} 个现有页面...",
+    "syncCompleted": "同步: 任务成功完成.",
+    "importFailed": "错误: 导入失败 - {error}",
+    "generalError": "错误: {error}"
+  }
+}

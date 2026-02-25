@@ -1,6 +1,7 @@
 import React from 'react';
 import { BookNode } from './BookNode';
 import { BookGroup } from '../../models/kindle-clipping.model';
+import { useLanguage } from '../../i18n/LanguageContext';
 import './ClippingTree.css';
 
 interface ClippingTreeProps {
@@ -18,11 +19,13 @@ export const ClippingTree: React.FC<ClippingTreeProps> = ({
   collapsedBookKeys,
   onToggleBookNode,
 }) => {
+  const { t } = useLanguage();
+
   return (
     <div style={{ border: '1px solid #eee', borderRadius: '6px', background: '#fff' }}>
       {groups.length === 0 ? (
         <div style={{ padding: '40px', textAlign: 'center', color: '#999' }}>
-          No matching clippings found
+          {t.clippingTree.noMatching}
         </div>
       ) : (
         groups.map((group) => (

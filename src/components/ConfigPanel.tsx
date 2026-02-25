@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useLanguage } from '../i18n/LanguageContext';
 
 interface ConfigPanelProps {
   apiKey: string;
@@ -16,6 +17,7 @@ export const ConfigPanel: React.FC<ConfigPanelProps> = ({
   onSave,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const { t } = useLanguage();
 
   return (
     <div
@@ -37,7 +39,7 @@ export const ConfigPanel: React.FC<ConfigPanelProps> = ({
           alignItems: 'center',
         }}
       >
-        <span style={{ fontWeight: 'bold', fontSize: '14px' }}>⚙️ Notion Connection Config</span>
+        <span style={{ fontWeight: 'bold', fontSize: '14px' }}>⚙️ {t.configPanel.title}</span>
         <span>{isOpen ? '▴' : '▾'}</span>
       </div>
 
@@ -55,13 +57,13 @@ export const ConfigPanel: React.FC<ConfigPanelProps> = ({
             <label
               style={{ display: 'block', fontSize: '12px', color: '#666', marginBottom: '4px' }}
             >
-              API Key
+              {t.configPanel.apiKeyLabel}
             </label>
             <input
               type="password"
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}
-              placeholder="secret_..."
+              placeholder={t.configPanel.apiKeyPlaceholder}
               style={{
                 width: '100%',
                 padding: '8px',
@@ -74,13 +76,13 @@ export const ConfigPanel: React.FC<ConfigPanelProps> = ({
             <label
               style={{ display: 'block', fontSize: '12px', color: '#666', marginBottom: '4px' }}
             >
-              Database / DataSource ID
+              {t.configPanel.databaseIdLabel}
             </label>
             <input
               type="text"
               value={databaseId}
               onChange={(e) => setDatabaseId(e.target.value)}
-              placeholder="Enter ID..."
+              placeholder={t.configPanel.databaseIdPlaceholder}
               style={{
                 width: '100%',
                 padding: '8px',
@@ -100,7 +102,7 @@ export const ConfigPanel: React.FC<ConfigPanelProps> = ({
               cursor: 'pointer',
             }}
           >
-            Save Configuration
+            {t.configPanel.saveButton}
           </button>
         </div>
       )}

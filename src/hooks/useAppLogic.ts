@@ -14,12 +14,16 @@ import {
   createNotionPagesForNewBooks, 
   appendNotionBlocksToExistingBooks 
 } from "../services/notion-service";
+import { useLanguage } from "../i18n/LanguageContext";
+
+type StatusKey = 'ready' | 'importing' | 'comparing' | 'syncing' | 'success' | 'error' | 'compareSuccess' | 'syncSuccess';
 
 export function useAppLogic() {
+  const { t } = useLanguage();
   const [kindleClippings, setKindleClippings] = useState<KindleClipping[]>([]);
   const [selectedIndices, setSelectedIndices] = useState<Set<number>>(new Set());
   const [searchTerm, setSearchTerm] = useState("");
-  const [statusText, setStatusText] = useState("Ready");
+  const [statusKey, setStatusKey] = useState<StatusKey>('ready');
   
   // Cache Notion IDs: Map<"Title|Author", PageID>
   const [existingBookIds, setExistingBookIds] = useState<Map<string, string>>(new Map());
@@ -75,7 +79,7 @@ export function useAppLogic() {
   const saveConfig = () => {
     localStorage.setItem("notion_api_key", apiKey);
     localStorage.setItem("notion_database_id", databaseId);
-    addLog("System: Configuration saved locally");
+    addLog(t.logs.configSaved);
   };
 
   const handleImport = async () => {
@@ -86,7 +90,7 @@ export function useAppLogic() {
       });
 
       if (selected && typeof selected === "string") {
-        setStatusText("Reading file...");
+        setStatusKey('importing');
         const content = await readTextFile(selected);
         const data = await parseKindleClippings(content);
         
@@ -95,8 +99,8 @@ export function useAppLogic() {
         setSelectedIndices(new Set()); 
         setExistingBookIds(new Map()); // Clear cache
         
-        setStatusText("Import completed");
-        addLog(`File: Successfully parsed ${data.length} clippings. Ready to Compare.`);
+        setStatusKey('success');
+        addLog(t.logs.parsedClippings.replace('{count}', data.length.toString()));
         
         // Collapse all nodes after import
         setTimeout(() => {
@@ -109,7 +113,7 @@ export function useAppLogic() {
         }, 0);
       }
     } catch (err: any) {
-      addLog(`Error: Import failed - ${err.message}`);
+      addLog(t.logs.importFailed.replace('{error}', err.message));
     }
   };
 
@@ -127,19 +131,20 @@ export function useAppLogic() {
       return;
     }
     if (kindleClippings.length === 0) {
-      addLog("Warn: No local clippings to compare.");
+      addLog(t.logs.noClippingsToCompare);
       return;
     }
 
     setIsComparing(true);
-    setStatusText("Fetching Notion data...");
-    addLog("Compare: Fetching all books from Notion...");
+    setStatusKey('comparing');
+    addLog(t.logs.compareFetchingNotion);
 
     try {
       // 1. Fetch Remote
       const notionClippings = await getAllBookClippings(apiKey, databaseId);
       const notionBooks = adaptNotionBooksToStandardBooks(notionClippings);
-      addLog(`Compare: Retrieved ${notionBooks.length} books from Notion.`);
+      console.log("Notion Books:", notionBooks);
+      addLog(t.logs.compareRetrieved.replace('{count}', notionBooks.length.toString()));
 
       // 2. Build ID Map (Title|Author -> ID)
       const idMap = new Map<string, string>();
@@ -157,8 +162,8 @@ export function useAppLogic() {
       setKindleClippings(uniqueClippings);
       setSelectedIndices(new Set());
 
-      setStatusText("Comparison complete");
-      addLog(`Compare: Finished. Hidden ${diffCount} existing clippings. Showing ${uniqueClippings.length} new/unsynced items.`);
+      setStatusKey('compareSuccess');
+      addLog(t.logs.compareFinished.replace('{hidden}', diffCount.toString()).replace('{showing}', uniqueClippings.length.toString()));
 
       // Collapse all nodes after compare
       setTimeout(() => {
@@ -171,8 +176,8 @@ export function useAppLogic() {
       }, 0);
 
     } catch (error: any) {
-      setStatusText("Comparison failed");
-      addLog(`Error: ${error.message}`);
+      setStatusKey('error');
+      addLog(t.logs.generalError.replace('{error}', error.message));
     } finally {
       setIsComparing(false);
     }
@@ -188,12 +193,12 @@ export function useAppLogic() {
     // 1. Get selected items from the CURRENT view (which should be the diff already)
     const toSync = kindleClippings.filter((_, i) => selectedIndices.has(i));
     if (toSync.length === 0) {
-        addLog("Sync: No items selected.");
+        addLog(t.logs.syncNoItemsSelected);
         return;
     }
 
-    setStatusText("Syncing...");
-    addLog(`Sync: Starting upload for ${toSync.length} items...`);
+    setStatusKey('syncing');
+    addLog(t.logs.syncStarting.replace('{count}', toSync.length.toString()));
 
     try {
       // 2. Convert to Book format
@@ -217,24 +222,24 @@ export function useAppLogic() {
 
       // 4. Upload
       if (newBooks.length > 0) {
-        addLog(`Sync: Creating ${newBooks.length} new pages...`);
+        addLog(t.logs.syncCreatingPages.replace('{count}', newBooks.length.toString()));
         await createNotionPagesForNewBooks(apiKey, databaseId, newBooks, addLog);
       }
 
       if (updatedBooks.length > 0) {
-        addLog(`Sync: Appending to ${updatedBooks.length} existing pages...`);
+        addLog(t.logs.syncAppendingPages.replace('{count}', updatedBooks.length.toString()));
         await appendNotionBlocksToExistingBooks(apiKey, updatedBooks, addLog);
       }
 
-      setStatusText("Sync successful");
-      addLog("Sync: Task completed successfully.");
+      setStatusKey('syncSuccess');
+      addLog(t.logs.syncCompleted);
 
       // Optional: Clear processed items from view? 
       // For now, let's leave them or user can manually clear/re-import if they want.
       
     } catch (error: any) {
-      setStatusText("Sync failed");
-      addLog(`Error: ${error.message}`);
+      setStatusKey('error');
+      addLog(t.logs.generalError.replace('{error}', error.message));
     }
   };
 
@@ -253,7 +258,7 @@ export function useAppLogic() {
     selectedIndices,
     searchTerm,
     setSearchTerm,
-    statusText,
+    statusKey,
     apiKey,
     setApiKey,
     databaseId,
