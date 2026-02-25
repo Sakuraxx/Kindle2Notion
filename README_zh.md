@@ -1,7 +1,7 @@
 # Kindle2Notion
 
 ![Platform](https://img.shields.io/badge/platform-Windows-lightgrey?style=flat-square)
-![License](https://img.shields.io/github/license/Sakuraxx/Kindle2Notion?style=flat-square)
+![MIT License](https://img.shields.io/badge/license-MIT-green?style=flat-square)
 ![Built with Tauri](https://img.shields.io/badge/built_with-Tauri_v2-24C8DB?style=flat-square&logo=tauri)
 
 > 一款轻量级的 Windows 桌面应用程序，旨在将您的 Kindle 标注（`My Clippings.txt`）无缝增量同步到 Notion 数据库。

@@ -1,6 +1,6 @@
 # Kindle2Notion
 ![Platform](https://img.shields.io/badge/platform-Windows-lightgrey?style=flat-square)
-![License](https://img.shields.io/github/license/Sakuraxx/Kindle2Notion?style=flat-square)
+![MIT License](https://img.shields.io/badge/license-MIT-green?style=flat-square)
 ![Built with Tauri](https://img.shields.io/badge/built_with-Tauri_v2-24C8DB?style=flat-square&logo=tauri)
 
 > A lightweight Windows desktop application designed to seamlessly and incrementally synchronize your Kindle highlights (`My Clippings.txt`) to a Notion database.
